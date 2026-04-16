@@ -123,6 +123,14 @@ a:hover {
   box-shadow: 0 2px 10px rgba(80, 128, 200, 0.35);
 }
 
+.brand-logo {
+  height: 52px;
+  width: auto;
+  border-radius: 10px;
+  display: block;
+  flex-shrink: 0;
+}
+
 .brand-text {
   display: flex;
   flex-direction: column;
@@ -310,7 +318,7 @@ a:hover {
 .hero-bg {
   position: absolute;
   inset: 0;
-  opacity: 0.45;
+  opacity: 0.62;
   object-fit: cover;
   width: 100%;
   height: 100%;
@@ -322,9 +330,9 @@ a:hover {
   inset: 0;
   background: linear-gradient(
     120deg,
-    rgba(90, 132, 200, 0.88) 0%,
-    rgba(107, 163, 224, 0.78) 45%,
-    rgba(150, 195, 238, 0.72) 100%
+    rgba(70, 110, 180, 0.74) 0%,
+    rgba(90, 140, 210, 0.62) 45%,
+    rgba(130, 175, 230, 0.50) 100%
   );
 }
 
@@ -719,7 +727,7 @@ section.section-alt {
 .life-grid {
   display: grid;
   gap: 1.25rem;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
 }
 
 .life-card {
@@ -855,4 +863,200 @@ section.section-alt {
 .hero .hero-lead a {
   color: rgba(255, 255, 255, 0.95);
   text-underline-offset: 3px;
+}
+
+/* —— Strip icons —— */
+.strip-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.strip-icon {
+  display: block;
+  width: 2.25rem;
+  height: 2.25rem;
+  margin: 0 auto 0.6rem;
+  opacity: 0.92;
+}
+
+/* —— Card icons (life-card, why-card) —— */
+.card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 10px;
+  background: var(--cream-dark);
+  color: var(--brand-blue);
+  margin-bottom: 0.85rem;
+}
+
+.card-icon svg {
+  width: 1.4rem;
+  height: 1.4rem;
+}
+
+/* —— Footer —— */
+.site-footer {
+  background: var(--brand-blue-dark);
+  color: rgba(255, 255, 255, 0.85);
+  padding: 3.5rem 0 0;
+}
+
+.footer-grid {
+  display: grid;
+  gap: 2.5rem;
+}
+
+@media (min-width: 768px) {
+  .footer-grid {
+    grid-template-columns: 1.6fr 1fr 1fr;
+    gap: 3rem;
+  }
+}
+
+.footer-brand .brand {
+  color: #fff;
+  margin-bottom: 0.75rem;
+  display: inline-flex;
+}
+
+.footer-brand .brand-mark {
+  background: rgba(255, 255, 255, 0.18);
+  box-shadow: none;
+}
+
+.footer-brand .brand-logo {
+  height: 60px;
+  border-radius: 12px;
+  opacity: 0.95;
+}
+
+.footer-brand .brand-text strong {
+  color: #fff;
+}
+
+.footer-brand .brand-text span {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.footer-tagline {
+  margin: 0.25rem 0 1.25rem;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.65);
+  max-width: 26ch;
+  line-height: 1.5;
+}
+
+.footer-social {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.footer-social a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.footer-social a:hover {
+  background: rgba(255, 255, 255, 0.22);
+  color: #fff;
+}
+
+.footer-social svg {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+.footer-col h4 {
+  font-family: var(--font-serif);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0 0 1rem;
+}
+
+.footer-col ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.footer-col ul a,
+.footer-col address a {
+  color: rgba(255, 255, 255, 0.68);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.15s;
+}
+
+.footer-col ul a:hover,
+.footer-col address a:hover {
+  color: #fff;
+}
+
+.footer-col address {
+  font-style: normal;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.footer-col address p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.footer-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: 2.5rem;
+  padding: 1.25rem 0;
+}
+
+.footer-bottom p {
+  margin: 0;
+  font-size: 0.83rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.footer-bottom p a {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.footer-bottom p a:hover {
+  color: #fff;
+}
+
+.footer-lang {
+  font-size: 0.83rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  padding: 0.3rem 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 6px;
+  transition: all 0.15s;
+}
+
+.footer-lang:hover {
+  color: #fff !important;
+  border-color: rgba(255, 255, 255, 0.4);
 }
