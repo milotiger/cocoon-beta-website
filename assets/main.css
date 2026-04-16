@@ -146,7 +146,9 @@ a:hover {
 .nav-main {
   display: flex;
   align-items: center;
+  flex-wrap: nowrap;
   gap: 0.25rem;
+  min-width: 0;
 }
 
 .nav-main a {
@@ -156,11 +158,71 @@ a:hover {
   color: var(--ink-muted);
   text-decoration: none;
   border-radius: 8px;
+  flex-shrink: 0;
+}
+
+@media (min-width: 901px) {
+  .nav-main a {
+    white-space: nowrap;
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1180px) {
+  .nav-main {
+    gap: 0.08rem;
+  }
+
+  .nav-main a {
+    padding: 0.45rem 0.42rem;
+    font-size: 0.78rem;
+  }
+
+  .nav-lang {
+    padding: 0.4rem 0.55rem !important;
+    font-size: 0.76rem !important;
+  }
+
+  .nav-cta {
+    padding: 0.5rem 0.75rem !important;
+    font-size: 0.78rem !important;
+  }
 }
 
 .nav-main a:hover {
   background: var(--coral-soft);
   color: var(--brand-blue);
+}
+
+.nav-lang {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 0.38rem;
+  padding: 0.45rem 0.72rem !important;
+  font-size: 0.82rem !important;
+  font-weight: 600 !important;
+  color: var(--brand-blue-dark) !important;
+  border: 1px solid var(--brand-blue-mist);
+  background: rgba(255, 255, 255, 0.65);
+  margin-left: 0.35rem;
+  box-shadow: 0 1px 3px rgba(80, 128, 200, 0.12);
+}
+
+.nav-lang-icon {
+  flex-shrink: 0;
+  width: 1.05em;
+  height: 1.05em;
+  opacity: 0.95;
+}
+
+.nav-lang-text {
+  line-height: 1;
+}
+
+.nav-lang:hover {
+  background: var(--gold-soft) !important;
+  color: var(--brand-blue-dark) !important;
+  border-color: var(--brand-blue-light);
 }
 
 .nav-cta {
@@ -219,6 +281,13 @@ a:hover {
 
   .nav-main a {
     padding: 0.75rem 1rem;
+    border-radius: var(--radius);
+  }
+
+  .nav-lang {
+    margin-left: 0;
+    margin-top: 0.35rem;
+    justify-content: center;
     border-radius: var(--radius);
   }
 
