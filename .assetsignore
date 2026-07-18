@@ -1,0 +1,19 @@
+# Repository metadata and local tooling
+.git/
+.github/
+.gitignore
+.assetsignore
+.DS_Store
+.wrangler/
+node_modules/
+
+# Source materials and project documentation are not public website assets
+materials/
+docs/
+README.md
+AGENTS.md
+
+# Local or generated files
+*.log
+*.tmp
+*.map
