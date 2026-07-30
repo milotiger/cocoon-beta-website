@@ -13,6 +13,10 @@ docs/
 README.md
 AGENTS.md
 
+# Superseded image assets that are no longer referenced by the website
+assets/favicon.svg
+assets/images/real-hero-campus.jpg
+
 # Local or generated files
 *.log
 *.tmp
