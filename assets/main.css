@@ -77,12 +77,21 @@ p { margin: 0; }
 .header-lang:focus-visible, .nav-toggle:focus-visible { outline: 3px solid rgba(13, 79, 159, 0.24); outline-offset: 2px; }
 .nav-toggle { display: none; width: 2.8rem; height: 2.8rem; padding: 0.7rem; border: 0; border-radius: 50%; background: var(--blue-soft); }
 .nav-toggle span { display: block; height: 2px; margin: 4px 0; border-radius: 2px; background: var(--blue); }
+.scroll-top-button { position: fixed; right: max(1.15rem, env(safe-area-inset-right, 0px)); bottom: max(4.8rem, calc(env(safe-area-inset-bottom, 0px) + 1rem)); z-index: 45; display: none; width: 3rem; height: 3rem; place-items: center; border: 1px solid rgba(255,255,255,0.72); border-radius: 50%; color: transparent; background: rgba(255,255,255,0.42); box-shadow: 0 12px 32px rgba(8,54,110,0.16); backdrop-filter: blur(20px) saturate(150%); -webkit-backdrop-filter: blur(20px) saturate(150%); font-size: 0; line-height: 1; opacity: 0; pointer-events: none; transform: translateY(0.85rem) scale(0.94); transition: opacity 180ms ease, transform 180ms ease, background 180ms ease; }
+.scroll-top-button::before { width: 0.86rem; height: 0.86rem; border-top: 0.2rem solid var(--blue); border-left: 0.2rem solid var(--blue); content: ""; transform: translateY(0.16rem) rotate(45deg); }
+.scroll-top-button::after { position: absolute; width: 0.2rem; height: 1.38rem; border-radius: 999px; background: var(--blue); content: ""; transform: translateY(0.25rem); }
+.scroll-top-button.is-visible { opacity: 1; pointer-events: auto; transform: translateY(0) scale(1); }
+.scroll-top-button:hover, .scroll-top-button:focus-visible { background: rgba(255,255,255,0.62); }
+.scroll-top-button:hover::before, .scroll-top-button:focus-visible::before { border-color: var(--blue-deep); }
+.scroll-top-button:hover::after, .scroll-top-button:focus-visible::after { background: var(--blue-deep); }
+.scroll-top-button:focus-visible { outline: 3px solid rgba(13, 79, 159, 0.24); outline-offset: 2px; }
 
 /* Hero */
 .hero { position: relative; min-height: min(860px, 92vh); padding-top: var(--header-h); display: flex; align-items: stretch; overflow: hidden; background: var(--cream); }
 .hero-image { position: absolute; inset: var(--header-h) 0 0 auto; width: 72%; height: calc(100% - var(--header-h)); object-fit: cover; object-position: 50% 50%; -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.08) 8%, rgba(0,0,0,0.5) 20%, #000 34%); mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.08) 8%, rgba(0,0,0,0.5) 20%, #000 34%); }
 .hero-wash { position: absolute; inset: var(--header-h) 0 0; background: linear-gradient(90deg, rgba(251,248,240,0.99) 0%, rgba(251,248,240,0.94) 27%, rgba(251,248,240,0.66) 38%, rgba(251,248,240,0.18) 52%, transparent 68%); pointer-events: none; }
 .hero-content { position: relative; z-index: 2; display: flex; flex-direction: column; justify-content: center; padding-block: 5rem 4rem; }
+.hero .eyebrow { display: inline-flex; align-self: flex-start; max-width: 100%; padding: 0.3rem 0.5rem; border-radius: 0.55rem; background: rgba(255,255,255,0.72); box-shadow: 0 8px 24px rgba(8,54,110,0.08); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
 .hero-content h1 { max-width: 8ch; color: var(--blue-deep); }
 .hero-lead { max-width: 550px; margin: 1.5rem 0 2rem; color: #425d72; font-size: clamp(1.05rem, 1.8vw, 1.28rem); }
 
@@ -278,6 +287,8 @@ p { margin: 0; }
 @media (max-width: 1060px) {
   .site-header.is-hidden { transform: translateY(-100%); }
   body.nav-open .site-header { transform: translateY(0); }
+  .scroll-top-button { display: grid; }
+  body.nav-open .scroll-top-button { opacity: 0; pointer-events: none; transform: translateY(1rem) scale(0.94); }
   .nav-actions { display: flex; }
   .nav-toggle { display: block; }
   .nav-main { position: fixed; inset: var(--header-h) 0 auto; display: flex; flex-direction: column; align-items: stretch; gap: 0.3rem; padding: 1rem; border-bottom: 1px solid var(--line); background: var(--paper); transform: translateY(-120%); opacity: 0; pointer-events: none; transition: 220ms ease; }
