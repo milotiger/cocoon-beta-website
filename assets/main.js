@@ -53,6 +53,53 @@ function initActiveNav({ navSelector }) {
   sections.forEach((section) => observer.observe(section));
 }
 
+function initMobileHeaderAutoHide({ headerSelector, navSelector, mobileQuery }) {
+  const header = document.querySelector(headerSelector);
+  const nav = document.querySelector(navSelector);
+  if (!header) return;
+
+  const mediaQuery = window.matchMedia(mobileQuery);
+  let previousScrollY = Math.max(0, window.scrollY);
+  let ticking = false;
+
+  function showHeader() {
+    header.classList.remove("is-hidden");
+  }
+
+  function updateHeader() {
+    const currentScrollY = Math.max(0, window.scrollY);
+    const scrollDelta = currentScrollY - previousScrollY;
+    const navIsOpen = nav?.classList.contains("is-open") || false;
+
+    if (!mediaQuery.matches || navIsOpen || currentScrollY < 24) {
+      showHeader();
+      previousScrollY = currentScrollY;
+      ticking = false;
+      return;
+    }
+
+    if (Math.abs(scrollDelta) >= 8) {
+      header.classList.toggle("is-hidden", scrollDelta > 0);
+      previousScrollY = currentScrollY;
+    }
+
+    ticking = false;
+  }
+
+  function requestHeaderUpdate() {
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(updateHeader);
+  }
+
+  window.addEventListener("scroll", requestHeaderUpdate, { passive: true });
+  if (typeof mediaQuery.addEventListener === "function") {
+    mediaQuery.addEventListener("change", requestHeaderUpdate);
+  } else {
+    mediaQuery.addListener(requestHeaderUpdate);
+  }
+}
+
 function initCarousels({ carouselSelector }) {
   document.querySelectorAll(carouselSelector).forEach((carousel) => {
     const viewport = carousel.querySelector("[data-carousel-viewport]");
@@ -183,6 +230,7 @@ function initTourForm({ formSelector }) {
 
 document.addEventListener("DOMContentLoaded", () => {
   initNavToggle({ toggleSelector: "[data-nav-toggle]", navSelector: "[data-nav-main]" });
+  initMobileHeaderAutoHide({ headerSelector: ".site-header", navSelector: "[data-nav-main]", mobileQuery: "(max-width: 1060px)" });
   initActiveNav({ navSelector: "[data-nav-main]" });
   initCarousels({ carouselSelector: "[data-carousel]" });
   initTourForm({ formSelector: "[data-tour-form]" });
