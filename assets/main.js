@@ -53,17 +53,29 @@ function initActiveNav({ navSelector }) {
   sections.forEach((section) => observer.observe(section));
 }
 
-function initMobileHeaderAutoHide({ headerSelector, navSelector, mobileQuery }) {
+function initMobileHeaderAutoHide({ headerSelector, navSelector, scrollButtonSelector, mobileQuery }) {
   const header = document.querySelector(headerSelector);
   const nav = document.querySelector(navSelector);
+  const scrollButton = document.querySelector(scrollButtonSelector);
   if (!header) return;
 
   const mediaQuery = window.matchMedia(mobileQuery);
   let previousScrollY = Math.max(0, window.scrollY);
   let ticking = false;
 
+  function setScrollButtonState({ isVisible }) {
+    if (!scrollButton) return;
+    scrollButton.classList.toggle("is-visible", isVisible);
+    scrollButton.setAttribute("aria-hidden", String(!isVisible));
+    scrollButton.tabIndex = isVisible ? 0 : -1;
+  }
+
   function showHeader() {
     header.classList.remove("is-hidden");
+  }
+
+  function hideHeader() {
+    header.classList.add("is-hidden");
   }
 
   function updateHeader() {
@@ -73,13 +85,20 @@ function initMobileHeaderAutoHide({ headerSelector, navSelector, mobileQuery }) 
 
     if (!mediaQuery.matches || navIsOpen || currentScrollY < 24) {
       showHeader();
+      setScrollButtonState({ isVisible: false });
       previousScrollY = currentScrollY;
       ticking = false;
       return;
     }
 
     if (Math.abs(scrollDelta) >= 8) {
-      header.classList.toggle("is-hidden", scrollDelta > 0);
+      if (scrollDelta > 0) {
+        hideHeader();
+        setScrollButtonState({ isVisible: false });
+      } else {
+        showHeader();
+        setScrollButtonState({ isVisible: currentScrollY > window.innerHeight * 0.65 });
+      }
       previousScrollY = currentScrollY;
     }
 
@@ -98,6 +117,12 @@ function initMobileHeaderAutoHide({ headerSelector, navSelector, mobileQuery }) 
   } else {
     mediaQuery.addListener(requestHeaderUpdate);
   }
+
+  scrollButton?.addEventListener("click", () => {
+    showHeader();
+    setScrollButtonState({ isVisible: false });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
 }
 
 function initDynamicThemeColor({ metaSelector, headerSelector }) {
@@ -340,7 +365,7 @@ function initTourForm({ formSelector }) {
 
 document.addEventListener("DOMContentLoaded", () => {
   initNavToggle({ toggleSelector: "[data-nav-toggle]", navSelector: "[data-nav-main]" });
-  initMobileHeaderAutoHide({ headerSelector: ".site-header", navSelector: "[data-nav-main]", mobileQuery: "(max-width: 1060px)" });
+  initMobileHeaderAutoHide({ headerSelector: ".site-header", navSelector: "[data-nav-main]", scrollButtonSelector: "[data-scroll-top]", mobileQuery: "(max-width: 1060px)" });
   initDynamicThemeColor({ metaSelector: "meta[name='theme-color']", headerSelector: ".site-header" });
   initActiveNav({ navSelector: "[data-nav-main]" });
   initCarousels({ carouselSelector: "[data-carousel]" });
