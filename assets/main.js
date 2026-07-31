@@ -100,6 +100,116 @@ function initMobileHeaderAutoHide({ headerSelector, navSelector, mobileQuery }) 
   }
 }
 
+function initDynamicThemeColor({ metaSelector, headerSelector }) {
+  const meta = document.querySelector(metaSelector);
+  if (!meta) return;
+
+  const header = document.querySelector(headerSelector);
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const defaultColor = "#fffdf8";
+  const themeRules = [
+    { selector: ".why-section, .testimonials", color: "#08366e" },
+    { selector: ".stats, .mini-cta, .tuition-card", color: "#0d4f9f" },
+    { selector: ".site-footer", color: "#e7f0f8" },
+    { selector: ".hero, .section-tint, .closing-cta", color: "#fbf8f0" },
+    { selector: ".section, .admissions, .philosophy, main", color: defaultColor }
+  ];
+  let currentColor = meta.getAttribute("content") || defaultColor;
+  let targetColor = currentColor;
+  let transitionFrame;
+  let ticking = false;
+
+  function parseHexColor({ color }) {
+    const normalizedColor = color.replace("#", "");
+    return {
+      red: parseInt(normalizedColor.slice(0, 2), 16),
+      green: parseInt(normalizedColor.slice(2, 4), 16),
+      blue: parseInt(normalizedColor.slice(4, 6), 16)
+    };
+  }
+
+  function formatHexChannel({ value }) {
+    return Math.round(value).toString(16).padStart(2, "0");
+  }
+
+  function blendHexColors({ fromColor, toColor, progress }) {
+    const from = parseHexColor({ color: fromColor });
+    const to = parseHexColor({ color: toColor });
+    const easedProgress = 1 - Math.pow(1 - progress, 3);
+
+    return `#${formatHexChannel({ value: from.red + (to.red - from.red) * easedProgress })}${formatHexChannel({ value: from.green + (to.green - from.green) * easedProgress })}${formatHexChannel({ value: from.blue + (to.blue - from.blue) * easedProgress })}`;
+  }
+
+  function getThemeColor({ element }) {
+    if (!element) return defaultColor;
+    const themeRule = themeRules.find(({ selector }) => element.closest(selector));
+    return themeRule?.color || defaultColor;
+  }
+
+  function getSampleElement() {
+    const headerBottom = header && !header.classList.contains("is-hidden")
+      ? header.getBoundingClientRect().bottom
+      : 0;
+    const sampleY = Math.min(window.innerHeight - 1, Math.max(1, headerBottom + 1));
+    const sampleX = Math.max(1, Math.round(window.innerWidth / 2));
+
+    if (typeof document.elementsFromPoint === "function") {
+      return document.elementsFromPoint(sampleX, sampleY)
+        .find((element) => !element.closest(".site-header"));
+    }
+
+    return document.elementFromPoint(sampleX, sampleY);
+  }
+
+  function updateThemeColor() {
+    const nextColor = getThemeColor({ element: getSampleElement() });
+    setThemeColor({ nextColor });
+    ticking = false;
+  }
+
+  function setThemeColor({ nextColor }) {
+    if (nextColor === targetColor) return;
+    targetColor = nextColor;
+    window.cancelAnimationFrame(transitionFrame);
+
+    if (prefersReducedMotion.matches) {
+      meta.setAttribute("content", nextColor);
+      currentColor = nextColor;
+      return;
+    }
+
+    const fromColor = currentColor;
+    const startTime = performance.now();
+    const duration = 220;
+
+    function step({ timestamp }) {
+      const progress = Math.min(1, (timestamp - startTime) / duration);
+      currentColor = blendHexColors({ fromColor, toColor: nextColor, progress });
+      meta.setAttribute("content", currentColor);
+
+      if (progress < 1) {
+        transitionFrame = window.requestAnimationFrame((nextTimestamp) => step({ timestamp: nextTimestamp }));
+        return;
+      }
+
+      currentColor = nextColor;
+      meta.setAttribute("content", nextColor);
+    }
+
+    transitionFrame = window.requestAnimationFrame((timestamp) => step({ timestamp }));
+  }
+
+  function requestThemeColorUpdate() {
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(updateThemeColor);
+  }
+
+  window.addEventListener("scroll", requestThemeColorUpdate, { passive: true });
+  window.addEventListener("resize", requestThemeColorUpdate);
+  requestThemeColorUpdate();
+}
+
 function initCarousels({ carouselSelector }) {
   document.querySelectorAll(carouselSelector).forEach((carousel) => {
     const viewport = carousel.querySelector("[data-carousel-viewport]");
@@ -231,6 +341,7 @@ function initTourForm({ formSelector }) {
 document.addEventListener("DOMContentLoaded", () => {
   initNavToggle({ toggleSelector: "[data-nav-toggle]", navSelector: "[data-nav-main]" });
   initMobileHeaderAutoHide({ headerSelector: ".site-header", navSelector: "[data-nav-main]", mobileQuery: "(max-width: 1060px)" });
+  initDynamicThemeColor({ metaSelector: "meta[name='theme-color']", headerSelector: ".site-header" });
   initActiveNav({ navSelector: "[data-nav-main]" });
   initCarousels({ carouselSelector: "[data-carousel]" });
   initTourForm({ formSelector: "[data-tour-form]" });
